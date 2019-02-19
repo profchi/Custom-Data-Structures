@@ -9,6 +9,7 @@ Author: Chinedu Isaiah
 #include "stdafx.h"
 #include <iostream>
 #include <cstdlib>
+#include <gtest/gtest.h>
 
 using namespace std;
 
@@ -107,41 +108,94 @@ class Stack {
 		struct Element *topElement;
 };
 
-int main()
+int main(int argc, char* argv[])
 {
-	Stack<int> Test;
-
-	// Adding elemets to the stack
-	Test.Push(5);
-	Test.Push(4);
-	Test.Push(35);
-	Test.Push(6);
-	Test.Push(7);
-
-
-
-	Test.Push(1);
-	Test.Push(2);
-	Test.Push(3);
-	Test.Push(4);
-
-	int *myArray = Test.ToArray();
-
-	for (int i = 0; i < Test.Size(); ++i) {
-		cout << myArray[i] << endl;
-	}
 	
-	cout << "" << endl;
-	cout << "" << endl;
+	testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
+
+}
+
+TEST(Stack, PushPopPeek) {
+	Stack<int> myStack;
+	
+	myStack.Push(5); 
+	myStack.Push(6);
+	myStack.Push(7);
+	myStack.Push(8);
+
+	EXPECT_EQ(myStack.Peek(), 8);
+	EXPECT_EQ(myStack.Pop(), 8);
+	EXPECT_EQ(myStack.Pop(), 7);
 
 
-	cout << Test.Peek() << endl;	//prints the first element without deleting it
-	cout << Test.Pop() << endl;		//prints the first element entered and deletes it
-	cout << Test.Pop() << endl;		//prints the second element entered and deletes it
-	cout << Test.Pop() << endl;		//prints the third element entered an deletes it
+}
 
-	cout << Test.Size() << endl;	//prints the current size
+TEST(Stack, IsEmpty) {
+	Stack<int> myStack;
+	
+	
+	EXPECT_TRUE(myStack.IsEmpty());
+	
+	myStack.Push(1);
+	myStack.Push(2);
 
-    return 0;
+
+	EXPECT_FALSE(myStack.IsEmpty());
+
+	myStack.Pop();
+	myStack.Pop();
+
+	EXPECT_TRUE(myStack.IsEmpty());
+}
+
+TEST(Stack, Size) {
+	Stack<int> myStack;
+
+	EXPECT_EQ(myStack.Size(), 0);
+
+	myStack.Push(5);
+	myStack.Push(6);
+	myStack.Push(7);
+	myStack.Push(8);
+
+	EXPECT_EQ(myStack.Size(), 4);
+
+	myStack.Pop();
+	myStack.Pop();
+	myStack.Pop();
+	myStack.Pop();
+
+	EXPECT_EQ(myStack.Size(), 0);
+
+	myStack.Push(5);
+	myStack.Push(6);
+
+
+	EXPECT_EQ(myStack.Size(), 2);
+}
+
+TEST(Stack, ToArray) {
+	Stack<int> myStack;
+	int *myArray;
+
+	myStack.Push(5);
+	myStack.Push(6);
+	myStack.Push(7);
+	myStack.Push(8);
+
+	myArray = myStack.ToArray();
+
+	EXPECT_EQ(myArray[0], 8);
+	EXPECT_EQ(myArray[3], 5);
+
+	free(myArray);
+	
+	myStack.Pop();
+
+	myArray = myStack.ToArray();
+	EXPECT_EQ(myArray[0], 7);
+	EXPECT_EQ(myArray[2], 5);
+
 }
 
