@@ -7,6 +7,7 @@ Author: Chinedu Isaiah
 #include "stdafx.h"
 #include <iostream>
 #include <cstdlib>
+#include <gtest/gtest.h>
 
 using namespace std;
 
@@ -106,41 +107,96 @@ class Queue {
 };
 
 
-int main()
+int main(int argc, char* argv[])
 {
-	Queue<int> Test;
-	
-	//Adding elements to the queue
-	Test.Push(1);
-	Test.Push(2);
-	Test.Push(3);
-	Test.Push(4);
-	Test.Push(5);
+
+	testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
+
+}
+
+TEST(Queue, PushPopPeek) {
+	Queue<int> myQueue;
+
+	myQueue.Push(5);
+	myQueue.Push(6);
+	myQueue.Push(7);
+	myQueue.Push(8);
+
+	EXPECT_EQ(myQueue.Peek(), 5);
+	EXPECT_EQ(myQueue.Pop(), 5);
+	EXPECT_EQ(myQueue.Pop(), 6);
 
 
+}
 
-	Test.Push(6);
-	Test.Push(7);
-	Test.Push(8);
-	Test.Push(9);
-
-	int *myArray = Test.ToArray();
-
-	for (int i = 0; i < Test.Size(); ++i) {
-		cout << myArray[i] << endl;
-	}
-
-	cout << "" << endl;
-	cout << "" << endl;
+TEST(Queue, IsEmpty) {
+	Queue<int> myQueue;
 
 
-	cout << Test.Peek() << endl;	//prints the first element without deleting it
-	cout << Test.Pop() << endl;		//prints the first element entered and deletes it
-	cout << Test.Pop() << endl;		//prints the second element entered and deletes it
-	cout << Test.Pop() << endl;		//prints the third element entered an deletes it
+	EXPECT_TRUE(myQueue.IsEmpty());
 
-	cout << Test.Size() << endl;	//prints the current size
+	myQueue.Push(1);
+	myQueue.Push(2);
 
-	return 0;
+
+	EXPECT_FALSE(myQueue.IsEmpty());
+
+	myQueue.Pop();
+	myQueue.Pop();
+
+	EXPECT_TRUE(myQueue.IsEmpty());
+}
+
+TEST(Queue, Size) {
+	Queue<int> myQueue;
+
+	EXPECT_EQ(myQueue.Size(), 0);
+
+	myQueue.Push(5);
+	myQueue.Push(6);
+	myQueue.Push(7);
+	myQueue.Push(8);
+
+	EXPECT_EQ(myQueue.Size(), 4);
+
+	myQueue.Pop();
+	myQueue.Pop();
+	myQueue.Pop();
+	myQueue.Pop();
+
+	EXPECT_EQ(myQueue.Size(), 0);
+
+	myQueue.Push(5);
+	myQueue.Push(6);
+
+
+	EXPECT_EQ(myQueue.Size(), 2);
+}
+
+TEST(Queue, ToArray) {
+	Queue<int> myQueue;
+	int *myArray;
+
+	myQueue.Push(5);
+	myQueue.Push(6);
+	myQueue.Push(7);
+	myQueue.Push(8);
+
+	myArray = myQueue.ToArray();
+
+	EXPECT_EQ(myArray[0], 5);
+	EXPECT_EQ(myArray[3], 8);
+
+	free(myArray);
+
+	myQueue.Pop();
+
+	myArray = myQueue.ToArray();
+	EXPECT_EQ(myArray[0], 6);
+	EXPECT_EQ(myArray[2], 8);
+
+	free(myArray);
+
 }
 
